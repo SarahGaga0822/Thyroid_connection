@@ -187,7 +187,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        //connect_Register();
+        registerButton.setOnClickListener(v -> {
+            connect_Register();
+        });
+
 
     }
 
@@ -261,11 +264,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     //注册信息前后端连接
     private void connect_Register(){
-        if(TextUtils.isEmpty(userName)||TextUtils.isEmpty(realName)||TextUtils.isEmpty(password)
+        /*if(TextUtils.isEmpty(userName)||TextUtils.isEmpty(realName)||TextUtils.isEmpty(password)
                 ||TextUtils.isEmpty(passwordConfirm)||TextUtils.isEmpty(birthDate)||TextUtils.isEmpty(phoneNumber)){
             Toast.makeText(RegisterActivity.this,"存在输入为空，注册失败",Toast.LENGTH_SHORT).show();
+            return;
+        }*/
+        if(!password.equals(passwordConfirm)){
+            Toast.makeText(RegisterActivity.this,"两次密码不一致，注册失败",Toast.LENGTH_SHORT).show();
+            return;
         }
-        else if(password.equals(passwordConfirm)){
 
             //开启新线程
             new Thread(new Runnable() {
@@ -290,7 +297,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         //构建请求
                         Request request = new Request.Builder()
-                                .url("http://192.168.31.226:8080/user/register") //我也不知道这个地址应该是什么
+                                .url("http://192.168.31.226:8080/user/register") //我也不知道这个地址应该怎么写
                                 .post(params.build())
                                 .build();
 
@@ -313,19 +320,19 @@ public class RegisterActivity extends AppCompatActivity {
                             public void run() {
                                 Toast.makeText(RegisterActivity.this,"注册成功！",Toast.LENGTH_SHORT).show();
                                 //注册成功后，自动跳转到登录页面
-                                registerButton.setOnClickListener(v -> {
-                                    Intent jump_to_main = new Intent(RegisterActivity.this,MainActivity.class);
-                                    startActivity(jump_to_main);
-                                });
+
+                                Intent jump_to_main = new Intent(RegisterActivity.this,MainActivity.class);
+                                startActivity(jump_to_main);
+                                };
                             }
-                        });
+                        );
 
                     }catch(Exception e){
                         e.printStackTrace();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(RegisterActivity.this,"网络连接失败",Toast.LENGTH_SHORT);
+                                Toast.makeText(RegisterActivity.this,"网络连接失败",Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -335,7 +342,7 @@ public class RegisterActivity extends AppCompatActivity {
             }){
 
             };
-        }
+
 
     }
 
